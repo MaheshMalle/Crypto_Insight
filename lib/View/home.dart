@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:crypto_insight/Model/coinModel.dart';
 import 'package:crypto_insight/View/Components/item.dart';
 import 'package:crypto_insight/View/Components/item2.dart';
@@ -13,12 +15,22 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
 
-  
+  Timer? _timer;
   @override
   void initState() {
     getCoinMarket();
     super.initState();
+    _timer = Timer.periodic(Duration(minutes: 1), (timer) {
+    _refreshData();
+  });
   }
+
+  void dispose() {
+  super.dispose();
+
+  // Cancel the timer when the widget is disposed
+  _timer?.cancel();
+}
 
   Future<void> _refreshData() async {
     // Add your data refresh logic here
@@ -166,7 +178,7 @@ class _HomeState extends State<Home> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'Assets',
+                                'Top Performing Coins',
                                 style: TextStyle(fontSize: 20),
                               ),
                               Icon(Icons.add)
@@ -216,7 +228,7 @@ class _HomeState extends State<Home> {
                           child: Row(
                             children: [
                               Text(
-                                'Recommend to Buy',
+                                'All Coins',
                                 style: TextStyle(
                                     fontSize: 22, fontWeight: FontWeight.bold),
                               ),
@@ -299,5 +311,6 @@ class _HomeState extends State<Home> {
     } else {
       print(response.statusCode);
     }
+    return null;
   }
 }

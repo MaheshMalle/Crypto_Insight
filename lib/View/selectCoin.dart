@@ -340,24 +340,29 @@ class _SelectCoinState extends State<SelectCoin> {
                       ),
                       Expanded(
                         flex: 5,
-                        child: Container(
-                          padding:
-                              EdgeInsets.symmetric(vertical: myHeight * 0.015),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(50),
-                              color: Color(0xffFBC700)),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.add,
-                                size: myHeight * 0.02,
-                              ),
-                              Text(
-                                'Add to portfolio',
-                                style: TextStyle(fontSize: 20),
-                              ),
-                            ],
+                        child: GestureDetector(
+                          onTap: () {
+                            // _showBuyDialog(context);
+                          },
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                                vertical: myHeight * 0.015),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(50),
+                                color: Color(0xffFBC700)),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.add,
+                                  size: myHeight * 0.02,
+                                ),
+                                Text(
+                                  'Add to portfolio',
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -459,4 +464,59 @@ class _SelectCoinState extends State<SelectCoin> {
       print(response.statusCode);
     }
   }
+
+  // void _showBuyDialog(BuildContext context) {
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       double? amount;
+
+  //       return AlertDialog(
+  //         title: Text('Buy ${widget.selectItem.id}'),
+  //         content: Container(
+  //           height: 100, // Set a fixed height for the content area
+  //           child: SingleChildScrollView(
+  //             child: Column(
+  //               mainAxisSize: MainAxisSize.min,
+  //               children: [
+  //                 TextField(
+  //                   onChanged: (value) {
+  //                     amount = double.tryParse(value);
+  //                   },
+  //                   keyboardType: TextInputType.number,
+  //                   decoration: InputDecoration(
+  //                     labelText: 'Amount',
+  //                   ),
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //         ),
+  //         actions: [
+  //           TextButton(
+  //             onPressed: () {
+  //               Navigator.of(context).pop();
+  //             },
+  //             child: Text('Cancel'),
+  //           ),
+  //           TextButton(
+  //             onPressed: () {
+  //               if (amount != null && amount! > 0) {
+  //                 Navigator.of(context).pop(amount);
+  //               } else {
+  //                 // Show an error message or validation
+  //               }
+  //             },
+  //             child: Text('Buy'),
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   ).then((value) {
+  //     if (value != null) {
+  //       // Pass the selected coin and amount back to the home screen
+  //       Navigator.of(context).pop(value);
+  //     }
+  //   });
+  // }
 }
