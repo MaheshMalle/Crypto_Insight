@@ -7,30 +7,29 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class Home extends StatefulWidget {
-  const Home({super.key});
+  const Home({Key? key}) : super(key: key);
 
   @override
   State<Home> createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
-
   Timer? _timer;
+
   @override
   void initState() {
-    getCoinMarket();
     super.initState();
+    getCoinMarket();
     _timer = Timer.periodic(Duration(minutes: 1), (timer) {
-    _refreshData();
-  });
+      _refreshData();
+    });
   }
 
+  @override
   void dispose() {
-  super.dispose();
-
-  // Cancel the timer when the widget is disposed
-  _timer?.cancel();
-}
+    _timer?.cancel();
+    super.dispose();
+  }
 
   Future<void> _refreshData() async {
     // Add your data refresh logic here
@@ -48,9 +47,28 @@ class _HomeState extends State<Home> {
     if (response.statusCode == 200) {
       var x = response.body;
       coinMarketList = coinModelFromJson(x);
+      // coinMarketList.sort((a, b) => a.marketCapChangePercentage24H
+      //.compareTo(b.marketCapChangePercentage24H));
+
+      int compareByMarketCapChange(CoinModel a, CoinModel b) {
+        final aPercentage = a.marketCapChangePercentage24H ?? 0.0;
+        final bPercentage = b.marketCapChangePercentage24H ?? 0.0;
+        return aPercentage.compareTo(bPercentage);
+      }
+
       setState(() {
         coinMarket = coinMarketList;
+        sorted = List.from(coinMarketList);
+        sorted!.sort((a, b) {
+          final aPercentage = a.marketCapChangePercentage24H ?? 0.0;
+          final bPercentage = b.marketCapChangePercentage24H ?? 0.0;
+          return aPercentage.compareTo(bPercentage);
+        });
       });
+
+      // for (int i = 0; i < sorted!.length; i++) {
+      //   print(sorted![i].marketCapChangePercentage24H);
+      // }
     } else {
       print(response.statusCode);
     }
@@ -65,22 +83,25 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     double myHeight = MediaQuery.of(context).size.height;
     double myWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: _refreshData,
         child: ListView(
+          shrinkWrap: true,
           children: [
             Container(
               height: myHeight,
               width: myWidth,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      Color.fromARGB(255, 253, 225, 112),
-                      Color(0xffFBC700),
-                    ]),
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Color.fromARGB(255, 253, 225, 112),
+                    Color(0xffFBC700),
+                  ],
+                ),
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -92,11 +113,13 @@ class _HomeState extends State<Home> {
                       children: [
                         Container(
                           padding: EdgeInsets.symmetric(
-                              horizontal: myWidth * 0.02,
-                              vertical: myHeight * 0.005),
+                            horizontal: myWidth * 0.02,
+                            vertical: myHeight * 0.005,
+                          ),
                           decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.5),
-                              borderRadius: BorderRadius.circular(5)),
+                            color: Colors.white.withOpacity(0.5),
+                            borderRadius: BorderRadius.circular(5),
+                          ),
                           child: Text(
                             'Main portfolio',
                             style: TextStyle(fontSize: 18),
@@ -107,7 +130,7 @@ class _HomeState extends State<Home> {
                           style: TextStyle(fontSize: 18),
                         ),
                         Text(
-                          'Exprimental',
+                          'Experimental',
                           style: TextStyle(fontSize: 18),
                         ),
                       ],
@@ -127,12 +150,11 @@ class _HomeState extends State<Home> {
                           height: myHeight * 0.05,
                           width: myWidth * 0.1,
                           decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.white.withOpacity(0.5)),
-                          child: Image.asset(
-                            'assets/icons/5.1.png',
+                            shape: BoxShape.circle,
+                            color: Colors.white.withOpacity(0.5),
                           ),
-                        )
+                          child: Image.asset('assets/icons/5.1.png'),
+                        ),
                       ],
                     ),
                   ),
@@ -147,80 +169,114 @@ class _HomeState extends State<Home> {
                       ],
                     ),
                   ),
-                  SizedBox(
-                    height: myHeight * 0.02,
-                  ),
+                  SizedBox(height: myHeight * 0.02),
                   Container(
                     height: myHeight * 0.7,
                     width: myWidth,
                     decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                              blurRadius: 5,
-                              color: Colors.grey.shade300,
-                              spreadRadius: 3,
-                              offset: Offset(0, 3))
-                        ],
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(50),
-                          topRight: Radius.circular(50),
-                        )),
+                      boxShadow: [
+                        BoxShadow(
+                          blurRadius: 5,
+                          color: Colors.grey.shade300,
+                          spreadRadius: 3,
+                          offset: Offset(0, 3),
+                        ),
+                      ],
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(50),
+                        topRight: Radius.circular(50),
+                      ),
+                    ),
                     child: Column(
                       children: [
-                        SizedBox(
-                          height: myHeight * 0.03,
-                        ),
-                        Padding(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: myWidth * 0.08),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        SizedBox(height: myHeight * 0.03),
+                        DefaultTabController(
+                          length: 2,
+                          child: Column(
                             children: [
-                              Text(
-                                'Top Performing Coins',
-                                style: TextStyle(fontSize: 20),
+                              TabBar(
+                                labelColor: Colors.black,
+                                tabs: [
+                                  Tab(
+                                    child: Text(
+                                      'Top Gainers',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                      ), // Add this line
+                                    ),
+                                  ),
+                                  Tab(
+                                    child: Text(
+                                      'Top Losers',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      // Add this line
+                                    ),
+                                  ),
+                                ],
                               ),
-                              Icon(Icons.add)
+                              Container(
+                                height: myHeight * 0.36,
+                                child: isRefreshing
+                                    ? Center(
+                                        child: CircularProgressIndicator(
+                                          color: Color(0xffFBC700),
+                                        ),
+                                      )
+                                    : coinMarket == null || coinMarket!.isEmpty
+                                        ? Padding(
+                                            padding:
+                                                EdgeInsets.all(myHeight * 0.06),
+                                            child: Center(
+                                              child: Text(
+                                                'Attention: This API is free, so you cannot send multiple requests per second. Please wait and try again later.',
+                                                style: TextStyle(fontSize: 18),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ),
+                                          )
+                                        : TabBarView(
+                                            children: [
+                                              ListView.builder(
+                                                itemCount: sorted!.length < 4
+                                                    ? sorted!.length
+                                                    : 4,
+                                                // shrinkWrap: true,
+                                                // physics:
+                                                //     NeverScrollableScrollPhysics(),
+                                                itemBuilder: (context, index) {
+                                                  return Item(
+                                                    item: sorted![
+                                                        sorted!.length -
+                                                            index -
+                                                            1],
+                                                  );
+                                                },
+                                              ),
+                                              ListView.builder(
+                                                itemCount: sorted!.length < 4
+                                                    ? sorted!.length
+                                                    : 4,
+                                                //shrinkWrap: true,
+                                                // physics:
+                                                //     NeverScrollableScrollPhysics(),
+                                                itemBuilder: (context, index) {
+                                                  return Item(
+                                                    item: sorted![index],
+                                                  );
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                              ),
                             ],
                           ),
-                        ),
-                        SizedBox(
-                          height: myHeight * 0.02,
-                        ),
-                        Container(
-                          height: myHeight * 0.36,
-                          child: isRefreshing == true
-                              ? Center(
-                                  child: CircularProgressIndicator(
-                                    color: Color(0xffFBC700),
-                                  ),
-                                )
-                              : coinMarket == null || coinMarket!.length == 0
-                                  ? Padding(
-                                      padding: EdgeInsets.all(myHeight * 0.06),
-                                      child: Center(
-                                        child: Text(
-                                          'Attention this Api is free, so you cannot send multiple requests per second, please wait and try again later.',
-                                          style: TextStyle(fontSize: 18),
-                                        ),
-                                      ),
-                                    )
-                                  : SingleChildScrollView(
-                                      child: ListView.builder(
-                                        itemCount: 4,
-                                        shrinkWrap: true,
-                                        physics: NeverScrollableScrollPhysics(),
-                                        itemBuilder: (context, index) {
-                                          return Item(
-                                            item: coinMarket![index],
-                                          );
-                                        },
-                                      ),
-                                    ),
-                        ),
-                        SizedBox(
-                          height: myHeight * 0.02,
                         ),
                         Padding(
                           padding:
@@ -230,31 +286,32 @@ class _HomeState extends State<Home> {
                               Text(
                                 'All Coins',
                                 style: TextStyle(
-                                    fontSize: 22, fontWeight: FontWeight.bold),
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ],
                           ),
                         ),
-                        SizedBox(
-                          height: myHeight * 0.01,
-                        ),
+                        SizedBox(height: myHeight * 0.01),
                         Expanded(
                           child: Padding(
                             padding: EdgeInsets.only(left: myWidth * 0.03),
-                            child: isRefreshing == true
+                            child: isRefreshing
                                 ? Center(
                                     child: CircularProgressIndicator(
                                       color: Color(0xffFBC700),
                                     ),
                                   )
-                                : coinMarket == null || coinMarket!.length == 0
+                                : coinMarket == null || coinMarket!.isEmpty
                                     ? Padding(
                                         padding:
                                             EdgeInsets.all(myHeight * 0.06),
                                         child: Center(
                                           child: Text(
-                                            'Attention this Api is free, so you cannot send multiple requests per second, please wait and try again later.',
+                                            'Attention: This API is free, so you cannot send multiple requests per second. Please wait and try again later.',
                                             style: TextStyle(fontSize: 18),
+                                            textAlign: TextAlign.center,
                                           ),
                                         ),
                                       )
@@ -269,12 +326,10 @@ class _HomeState extends State<Home> {
                                       ),
                           ),
                         ),
-                        SizedBox(
-                          height: myHeight * 0.01,
-                        ),
+                        SizedBox(height: myHeight * 0.01),
                       ],
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
@@ -287,6 +342,8 @@ class _HomeState extends State<Home> {
   bool isRefreshing = true;
 
   List? coinMarket = [];
+  List? sorted = [];
+
   var coinMarketList;
   Future<List<CoinModel>?> getCoinMarket() async {
     const url =
@@ -305,8 +362,21 @@ class _HomeState extends State<Home> {
     if (response.statusCode == 200) {
       var x = response.body;
       coinMarketList = coinModelFromJson(x);
+
+      int compareByMarketCapChange(CoinModel a, CoinModel b) {
+        final aPercentage = a.marketCapChangePercentage24H ?? 0.0;
+        final bPercentage = b.marketCapChangePercentage24H ?? 0.0;
+        return aPercentage.compareTo(bPercentage);
+      }
+
       setState(() {
         coinMarket = coinMarketList;
+        sorted = List.from(coinMarketList);
+        sorted!.sort((a, b) {
+          final aPercentage = a.marketCapChangePercentage24H ?? 0.0;
+          final bPercentage = b.marketCapChangePercentage24H ?? 0.0;
+          return aPercentage.compareTo(bPercentage);
+        });
       });
     } else {
       print(response.statusCode);

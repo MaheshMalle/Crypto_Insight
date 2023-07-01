@@ -42,7 +42,7 @@ class _IOState extends State<IO> {
                 Text(
                   'Crypto Insight',
                   style: TextStyle(
-                      fontSize: 60,
+                      fontSize: 55,
                       color: Colors.black,
                       fontWeight: FontWeight.bold),
                 ),
