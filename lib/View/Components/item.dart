@@ -46,7 +46,7 @@ class Item extends StatelessWidget {
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      '0.4 ' + item.symbol,
+                      'rank ' + item.marketCapRank.toString(),
                       style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.normal,

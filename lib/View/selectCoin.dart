@@ -128,7 +128,7 @@ class _SelectCoinState extends State<SelectCoin> {
                           Text(
                             '\$' + widget.selectItem.low24H.toString(),
                             style: TextStyle(
-                                fontSize: 18,
+                                fontSize: 17,
                                 fontWeight: FontWeight.normal,
                                 color: Colors.black),
                           ),
@@ -149,7 +149,7 @@ class _SelectCoinState extends State<SelectCoin> {
                           Text(
                             '\$' + widget.selectItem.high24H.toString(),
                             style: TextStyle(
-                                fontSize: 18,
+                                fontSize: 17,
                                 fontWeight: FontWeight.normal,
                                 color: Colors.black),
                           ),
@@ -172,7 +172,7 @@ class _SelectCoinState extends State<SelectCoin> {
                                 widget.selectItem.totalVolume.toString() +
                                 'M',
                             style: TextStyle(
-                                fontSize: 18,
+                                fontSize: 17,
                                 fontWeight: FontWeight.normal,
                                 color: Colors.black),
                           ),
