@@ -302,7 +302,7 @@ class _SelectCoinState extends State<SelectCoin> {
                         children: [
                           Expanded(
                             child: Text(
-                              'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+                              'Bitcoin reaches new all-time high, surpassing \$60,000 mark, as institutional adoption and positive market sentiment drive the cryptocurrency market forward." "Ethereums London hard fork upgrade successfully implemented, introducing EIP-1559 and enhancing the networks scalability and transaction fee model.',
                               textAlign: TextAlign.justify,
                               style:
                                   TextStyle(color: Colors.grey, fontSize: 17),

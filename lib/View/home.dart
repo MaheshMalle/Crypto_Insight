@@ -88,7 +88,6 @@ class _HomeState extends State<Home> {
       body: RefreshIndicator(
         onRefresh: _refreshData,
         child: ListView(
-          shrinkWrap: true,
           children: [
             Container(
               height: myHeight,
@@ -247,15 +246,12 @@ class _HomeState extends State<Home> {
                                                 itemCount: sorted!.length < 4
                                                     ? sorted!.length
                                                     : 4,
-                                                // shrinkWrap: true,
+                                                shrinkWrap: true,
                                                 // physics:
                                                 //     NeverScrollableScrollPhysics(),
                                                 itemBuilder: (context, index) {
                                                   return Item(
-                                                    item: sorted![
-                                                        sorted!.length -
-                                                            index -
-                                                            1],
+                                                    item: sorted![sorted!.length - index - 1],
                                                   );
                                                 },
                                               ),
